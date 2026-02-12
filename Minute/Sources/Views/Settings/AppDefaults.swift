@@ -14,4 +14,7 @@ enum AppDefaultsKey {
     static let micActivityNotificationsEnabled = AppConfiguration.Defaults.micActivityNotificationsEnabledKey
     static let knownSpeakerSuggestionsEnabled = AppConfiguration.Defaults.knownSpeakerSuggestionsEnabledKey
     static let outputLanguage = AppConfiguration.Defaults.outputLanguageKey
+    static let autoStopRecordingEnabled = AppConfiguration.Defaults.autoStopRecordingEnabledKey
+    static let maxRecordingDurationMinutes = AppConfiguration.Defaults.maxRecordingDurationMinutesKey
+    static let recordingRemindersEnabled = AppConfiguration.Defaults.recordingRemindersEnabledKey
 }

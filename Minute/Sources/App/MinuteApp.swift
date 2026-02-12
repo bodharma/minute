@@ -80,13 +80,26 @@ private final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotifica
             title: "Start Recording",
             options: [.foreground]
         )
-        let category = UNNotificationCategory(
+        let micCategory = UNNotificationCategory(
             identifier: MicActivityNotification.categoryIdentifier,
             actions: [startAction],
             intentIdentifiers: [],
             options: []
         )
-        center.setNotificationCategories([category])
+
+        let stopAction = UNNotificationAction(
+            identifier: RecordingGuardNotification.stopActionIdentifier,
+            title: "Stop Recording",
+            options: [.foreground]
+        )
+        let guardCategory = UNNotificationCategory(
+            identifier: RecordingGuardNotification.categoryIdentifier,
+            actions: [stopAction],
+            intentIdentifiers: [],
+            options: []
+        )
+
+        center.setNotificationCategories([micCategory, guardCategory])
     }
 
     func userNotificationCenter(
@@ -94,7 +107,9 @@ private final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotifica
         willPresent notification: UNNotification,
         withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
     ) {
-        if notification.request.content.categoryIdentifier == MicActivityNotification.categoryIdentifier {
+        let category = notification.request.content.categoryIdentifier
+        if category == MicActivityNotification.categoryIdentifier
+            || category == RecordingGuardNotification.categoryIdentifier {
             completionHandler([.banner, .sound])
         } else {
             completionHandler([])
@@ -107,15 +122,21 @@ private final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotifica
         withCompletionHandler completionHandler: @escaping () -> Void
     ) {
         defer { completionHandler() }
-        guard response.notification.request.content.categoryIdentifier == MicActivityNotification.categoryIdentifier else {
-            return
-        }
+        let category = response.notification.request.content.categoryIdentifier
 
-        NSApp.activate(ignoringOtherApps: true)
-        NotificationCenter.default.post(name: .minuteMicActivityShowPipeline, object: nil)
+        if category == MicActivityNotification.categoryIdentifier {
+            NSApp.activate(ignoringOtherApps: true)
+            NotificationCenter.default.post(name: .minuteMicActivityShowPipeline, object: nil)
 
-        if response.actionIdentifier == MicActivityNotification.startActionIdentifier {
-            NotificationCenter.default.post(name: .minuteMicActivityStartRecording, object: nil)
+            if response.actionIdentifier == MicActivityNotification.startActionIdentifier {
+                NotificationCenter.default.post(name: .minuteMicActivityStartRecording, object: nil)
+            }
+        } else if category == RecordingGuardNotification.categoryIdentifier {
+            NSApp.activate(ignoringOtherApps: true)
+
+            if response.actionIdentifier == RecordingGuardNotification.stopActionIdentifier {
+                NotificationCenter.default.post(name: .minuteRecordingGuardStopRecording, object: nil)
+            }
         }
     }
 }

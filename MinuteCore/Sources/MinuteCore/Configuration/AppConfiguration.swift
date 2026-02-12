@@ -20,6 +20,9 @@ public struct AppConfiguration: Sendable, Equatable {
         public static let micActivityNotificationsEnabledKey = "micActivityNotificationsEnabled"
         public static let knownSpeakerSuggestionsEnabledKey = "knownSpeakerSuggestionsEnabled"
         public static let outputLanguageKey = "outputLanguage"
+        public static let autoStopRecordingEnabledKey = "autoStopRecordingEnabled"
+        public static let maxRecordingDurationMinutesKey = "maxRecordingDurationMinutes"
+        public static let recordingRemindersEnabledKey = "recordingRemindersEnabled"
 
         public static let stageMeetingTypeKey = "stageMeetingType"
         public static let stageLanguageProcessingKey = "stageLanguageProcessing"
@@ -38,6 +41,9 @@ public struct AppConfiguration: Sendable, Equatable {
         public static let defaultMicActivityNotificationsEnabled = true
         public static let defaultKnownSpeakerSuggestionsEnabled = false
         public static let defaultOutputLanguage = OutputLanguage.defaultSelection
+        public static let defaultAutoStopRecordingEnabled = true
+        public static let defaultMaxRecordingDurationMinutes = 120
+        public static let defaultRecordingRemindersEnabled = true
         public static let defaultTranscriptionBackendID = TranscriptionBackend.whisper.rawValue
         public static let defaultFluidAudioAsrModelID = FluidAudioASRModelCatalog.defaultModelID
 
@@ -58,6 +64,9 @@ public struct AppConfiguration: Sendable, Equatable {
     public var screenContextCaptureIntervalSeconds: TimeInterval
     public var micActivityNotificationsEnabled: Bool
     public var knownSpeakerSuggestionsEnabled: Bool
+    public var autoStopRecordingEnabled: Bool
+    public var maxRecordingDurationMinutes: Int
+    public var recordingRemindersEnabled: Bool
 
     public init(defaults: UserDefaults = .standard) {
         meetingsRelativePath = Self.validatedRelativePath(
@@ -91,6 +100,13 @@ public struct AppConfiguration: Sendable, Equatable {
 
         knownSpeakerSuggestionsEnabled = defaults.object(forKey: Defaults.knownSpeakerSuggestionsEnabledKey) as? Bool
             ?? Defaults.defaultKnownSpeakerSuggestionsEnabled
+
+        autoStopRecordingEnabled = defaults.object(forKey: Defaults.autoStopRecordingEnabledKey) as? Bool
+            ?? Defaults.defaultAutoStopRecordingEnabled
+        let rawMinutes = defaults.object(forKey: Defaults.maxRecordingDurationMinutesKey) as? Int
+        maxRecordingDurationMinutes = rawMinutes ?? Defaults.defaultMaxRecordingDurationMinutes
+        recordingRemindersEnabled = defaults.object(forKey: Defaults.recordingRemindersEnabledKey) as? Bool
+            ?? Defaults.defaultRecordingRemindersEnabled
     }
 
     public static func validatedRelativePath(_ value: String?, fallback: String) -> String {

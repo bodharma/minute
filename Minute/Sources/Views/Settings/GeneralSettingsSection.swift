@@ -8,6 +8,13 @@ struct GeneralSettingsSection: View {
     private var normalizeAnalysisAudio: Bool = AppConfiguration.Defaults.defaultNormalizeAnalysisAudio
     @AppStorage(AppDefaultsKey.micActivityNotificationsEnabled)
     private var micActivityNotificationsEnabled: Bool = AppConfiguration.Defaults.defaultMicActivityNotificationsEnabled
+    @AppStorage(AppDefaultsKey.autoStopRecordingEnabled)
+    private var autoStopRecordingEnabled: Bool = AppConfiguration.Defaults.defaultAutoStopRecordingEnabled
+    @AppStorage(AppDefaultsKey.maxRecordingDurationMinutes)
+    private var maxRecordingDurationMinutes: Int = AppConfiguration.Defaults.defaultMaxRecordingDurationMinutes
+    @AppStorage(AppDefaultsKey.recordingRemindersEnabled)
+    private var recordingRemindersEnabled: Bool = AppConfiguration.Defaults.defaultRecordingRemindersEnabled
+
     @AppStorage(AppDefaultsKey.outputLanguage)
     private var outputLanguageRaw: String = AppConfiguration.Defaults.defaultOutputLanguage.rawValue
 
@@ -43,6 +50,31 @@ struct GeneralSettingsSection: View {
                     "Mic activity reminders",
                     detail: "Show a notification when the microphone becomes active.",
                     isOn: $micActivityNotificationsEnabled
+                )
+            }
+
+            Section("Recording Safety") {
+                SettingsToggleRow(
+                    "Auto-stop recording",
+                    detail: "Automatically stop recording after the time limit to prevent runaway sessions.",
+                    isOn: $autoStopRecordingEnabled
+                )
+
+                if autoStopRecordingEnabled {
+                    Picker("Maximum duration", selection: $maxRecordingDurationMinutes) {
+                        Text("30 minutes").tag(30)
+                        Text("1 hour").tag(60)
+                        Text("2 hours").tag(120)
+                        Text("3 hours").tag(180)
+                        Text("4 hours").tag(240)
+                    }
+                    .pickerStyle(.menu)
+                }
+
+                SettingsToggleRow(
+                    "Recording reminders",
+                    detail: "Show a notification every 30 minutes while recording.",
+                    isOn: $recordingRemindersEnabled
                 )
             }
 

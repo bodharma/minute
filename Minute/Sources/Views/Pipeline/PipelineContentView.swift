@@ -15,6 +15,7 @@ struct PipelineContentView: View {
     private var micActivityNotificationsEnabled: Bool = AppConfiguration.Defaults.defaultMicActivityNotificationsEnabled
 
     @State private var micActivityCoordinator = MicActivityNotificationCoordinator()
+    @State private var recordingGuardService = RecordingGuardService()
     @FocusState private var recordButtonFocused: Bool
     @State private var isImportingFile = false
     @State private var isDropTargeted = false
@@ -78,15 +79,24 @@ struct PipelineContentView: View {
                 notesModel.refresh()
                 micActivityCoordinator.setEnabled(micActivityNotificationsEnabled)
                 micActivityCoordinator.updatePipelineState(model.state)
+                recordingGuardService.onAutoStop = { model.send(.stopRecording) }
             }
             .onDisappear {
                 micActivityCoordinator.stop()
+                recordingGuardService.stopGuard()
             }
             .onReceive(model.$state) { newState in
                 if case let .done(noteURL, _) = newState {
                     notesModel.refreshAndSelect(noteURL: noteURL)
                 }
                 micActivityCoordinator.updatePipelineState(newState)
+
+                if case .recording(let session) = newState {
+                    let config = AppConfiguration()
+                    recordingGuardService.startGuard(recordingStartedAt: session.startedAt, configuration: config)
+                } else {
+                    recordingGuardService.stopGuard()
+                }
             }
             .onReceive(model.$lastBackgroundProcessedNoteURL.compactMap { $0 }) { noteURL in
                 notesModel.refreshAndSelect(noteURL: noteURL)
@@ -112,6 +122,11 @@ struct PipelineContentView: View {
             }
             .onReceive(NotificationCenter.default.publisher(for: .minuteMicActivityStartRecording)) { _ in
                 handleNotificationStartRecording()
+            }
+            .onReceive(NotificationCenter.default.publisher(for: .minuteRecordingGuardStopRecording)) { _ in
+                if model.captureState == .recording {
+                    model.send(.stopRecording)
+                }
             }
         }
     }
