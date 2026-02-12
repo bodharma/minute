@@ -128,6 +128,9 @@ struct PipelineContentView: View {
                     model.send(.stopRecording)
                 }
             }
+            .onReceive(NotificationCenter.default.publisher(for: .minuteRecordingGuardContinueRecording)) { _ in
+                recordingGuardService.continueRecording()
+            }
         }
     }
 

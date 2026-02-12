@@ -92,9 +92,14 @@ private final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotifica
             title: "Stop Recording",
             options: [.foreground]
         )
+        let continueAction = UNNotificationAction(
+            identifier: RecordingGuardNotification.continueActionIdentifier,
+            title: "Continue",
+            options: []
+        )
         let guardCategory = UNNotificationCategory(
             identifier: RecordingGuardNotification.categoryIdentifier,
-            actions: [stopAction],
+            actions: [continueAction, stopAction],
             intentIdentifiers: [],
             options: []
         )
@@ -132,10 +137,11 @@ private final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotifica
                 NotificationCenter.default.post(name: .minuteMicActivityStartRecording, object: nil)
             }
         } else if category == RecordingGuardNotification.categoryIdentifier {
-            NSApp.activate(ignoringOtherApps: true)
-
             if response.actionIdentifier == RecordingGuardNotification.stopActionIdentifier {
+                NSApp.activate(ignoringOtherApps: true)
                 NotificationCenter.default.post(name: .minuteRecordingGuardStopRecording, object: nil)
+            } else if response.actionIdentifier == RecordingGuardNotification.continueActionIdentifier {
+                NotificationCenter.default.post(name: .minuteRecordingGuardContinueRecording, object: nil)
             }
         }
     }

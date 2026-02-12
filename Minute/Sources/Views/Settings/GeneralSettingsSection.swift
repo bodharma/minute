@@ -56,7 +56,7 @@ struct GeneralSettingsSection: View {
             Section("Recording Safety") {
                 SettingsToggleRow(
                     "Auto-stop recording",
-                    detail: "Automatically stop recording after the time limit to prevent runaway sessions.",
+                    detail: "Notify at the time limit with a 5-minute grace period to continue or stop.",
                     isOn: $autoStopRecordingEnabled
                 )
 

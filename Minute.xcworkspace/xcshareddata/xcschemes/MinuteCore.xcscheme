@@ -15,7 +15,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "PACKAGE-PRODUCT:MinuteCore"
+               BlueprintIdentifier = "MinuteCore"
                BuildableName = "MinuteCore"
                BlueprintName = "MinuteCore"
                ReferencedContainer = "container:MinuteCore">
@@ -29,8 +29,8 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "PACKAGE-TEST:MinuteCoreTests"
-               BuildableName = "MinuteCoreTests.xctest"
+               BlueprintIdentifier = "MinuteCoreTests"
+               BuildableName = "MinuteCoreTests"
                BlueprintName = "MinuteCoreTests"
                ReferencedContainer = "container:MinuteCore">
             </BuildableReference>
@@ -48,8 +48,8 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "PACKAGE-TEST:MinuteCoreTests"
-               BuildableName = "MinuteCoreTests.xctest"
+               BlueprintIdentifier = "MinuteCoreTests"
+               BuildableName = "MinuteCoreTests"
                BlueprintName = "MinuteCoreTests"
                ReferencedContainer = "container:MinuteCore">
             </BuildableReference>
@@ -69,7 +69,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "PACKAGE-PRODUCT:MinuteCore"
+            BlueprintIdentifier = "MinuteCore"
             BuildableName = "MinuteCore"
             BlueprintName = "MinuteCore"
             ReferencedContainer = "container:MinuteCore">
@@ -85,7 +85,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "PACKAGE-PRODUCT:MinuteCore"
+            BlueprintIdentifier = "MinuteCore"
             BuildableName = "MinuteCore"
             BlueprintName = "MinuteCore"
             ReferencedContainer = "container:MinuteCore">
